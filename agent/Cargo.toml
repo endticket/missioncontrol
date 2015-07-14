@@ -1,0 +1,6 @@
+[package]
+name = "missioncontrol-agent"
+version = "0.1.0"
+authors = ["deathowl <bagoly@endticket.com>"]
+[dependencies.getopts]
+version = "0.2.11"
