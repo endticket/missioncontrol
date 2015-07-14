@@ -5,6 +5,7 @@ use std::net::{TcpListener,TcpStream};
 use std::env;
 use std::thread;
 use std::mem;
+mod configparser;
 
 
 fn string_to_static_str(s: String) -> &'static str {
@@ -37,7 +38,7 @@ fn main() {
         None => "127.0.0.1:37565"
     };
 
-    println!("{:?}", listen_on);
+    println!("Listening on {:?}", listen_on);
 
     let listener = TcpListener::bind(listen_on).unwrap();
 
