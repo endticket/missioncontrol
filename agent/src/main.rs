@@ -1,5 +1,5 @@
 extern crate getopts;
-use getopts::getopts;
+use getopts::Options;
 use std::process::Command;
 use std::net::{TcpListener,TcpStream};
 use std::env;
@@ -8,27 +8,27 @@ use std::thread;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
-    let opts = [
-        optflag("d", "daemon", "conver this into a daemon"),
-    ];
-    let matches = match getopts(args.tail(), &opts) {
-        Ok(m) => { m },
+    let program = args[0].clone();
+    let mut opts = Options::new();
+    opts.optflag("d", "daemon", "convert this into a daemon");
+
+    let matches = match opts.parse(&args[1..]) {
+        Ok(m) => { m }
         Err(f) => { panic!(f.to_string()) }
     };
 
     // Create a daemon? if necessary
-    /*if matches.opt_present("d") {
-        let child = Command::new(args[0].as_slice())
-                            .detached().spawn().unwrap();
-        println!("Created child: {}", child.id());
-        child.forget();
+    if matches.opt_present("d") {
+        let child = Command::new(program).spawn().unwrap();
+        //println!("Created child: {}", child.id());
+        //child.forget();
         return;
-    }*/
+    }
 
-   let listener = TcpListener::bind("127.0.0.1:80").unwrap();
+    let listener = TcpListener::bind("127.0.0.1:37565").unwrap();
 
     fn handle_client(stream: TcpStream) {
-        // ...
+
     }
 
     // accept connections and process them, spawning a new thread for each one
