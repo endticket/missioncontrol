@@ -41,13 +41,16 @@ fn main() {
 
     // Create a daemon? if necessary
     if matches.opt_present("d") {
-        let child = Command::new(program).arg("-l").arg(listen_on).spawn().unwrap();
+        let child = Command::new(program).arg("-l").arg(listen_on)
+            .arg("-m").arg(master_connection).spawn().unwrap();
         return;
     }
 
     println!("Listening on {:?}", listen_on);
+    println!("Connecting to Missioncontrol master on {:?}", master_connection);
 
     let listener = TcpListener::bind(listen_on).unwrap();
+    let master_stream = TcpStream::connect(master_connection).unwrap();
 
     fn handle_client(stream: TcpStream) {
         //TODO
@@ -65,6 +68,8 @@ fn main() {
             Err(e) => { /* connection failed */ }
         }
     }
+
+
 
     // close the socket server
     drop(listener);
