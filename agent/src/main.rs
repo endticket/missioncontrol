@@ -22,6 +22,7 @@ fn main() {
     let mut opts = Options::new();
     opts.optflag("d", "daemon", "convert this into a daemon");
     opts.optopt("l", "listen", "Listen on", "LISTEN");
+    opts.optopt("m", "master", "Connect to", "CONNECT");
 
     let matches = match opts.parse(&args[1..]) {
         Ok(m) => { m }
@@ -31,6 +32,11 @@ fn main() {
     let listen_on = match matches.opt_str("l") {
         Some(x) => string_to_static_str(x),
         None => "127.0.0.1:37565"
+    };
+
+    let master_connection = match matches.opt_str("m") {
+        Some(x) => string_to_static_str(x),
+        None => panic!("Please Specify your Missioncontrol master host".to_string())
     };
 
     // Create a daemon? if necessary
