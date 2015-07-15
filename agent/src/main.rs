@@ -28,15 +28,16 @@ fn main() {
         Err(f) => { panic!(f.to_string()) }
     };
 
-    // Create a daemon? if necessary
-    if matches.opt_present("d") {
-        let child = Command::new(program).spawn().unwrap();
-        return;
-    }
     let listen_on = match matches.opt_str("l") {
         Some(x) => string_to_static_str(x),
         None => "127.0.0.1:37565"
     };
+
+    // Create a daemon? if necessary
+    if matches.opt_present("d") {
+        let child = Command::new(program).arg("-l").arg(listen_on).spawn().unwrap();
+        return;
+    }
 
     println!("Listening on {:?}", listen_on);
 
