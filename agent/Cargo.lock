@@ -3,8 +3,14 @@ name = "missioncontrol-agent"
 version = "0.1.0"
 dependencies = [
  "getopts 0.2.11 (registry+https://github.com/rust-lang/crates.io-index)",
+ "msgpack 0.1.0 (git+http://github.com/mneumann/rust-msgpack)",
  "toml 0.1.21 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
+
+[[package]]
+name = "byteorder"
+version = "0.3.11"
+source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "getopts"
@@ -25,6 +31,15 @@ version = "0.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "libc 0.1.8 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "msgpack"
+version = "0.1.0"
+source = "git+http://github.com/mneumann/rust-msgpack#03d7c62191a0aa5fde19a57ceca5925ee0ab4f03"
+dependencies = [
+ "byteorder 0.3.11 (registry+https://github.com/rust-lang/crates.io-index)",
+ "rustc-serialize 0.3.15 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]

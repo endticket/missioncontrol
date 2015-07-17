@@ -4,6 +4,7 @@ use std::process::Command;
 use std::net::{TcpListener,TcpStream};
 use std::env;
 use std::thread;
+use std::io::prelude::*;
 use std::mem;
 mod configparser;
 
@@ -50,10 +51,17 @@ fn main() {
     println!("Connecting to Missioncontrol master on {:?}", master_connection);
 
     let listener = TcpListener::bind(listen_on).unwrap();
-    let master_stream = TcpStream::connect(master_connection).unwrap();
+    let mut master_stream = TcpStream::connect(master_connection);
 
-    fn handle_client(stream: TcpStream) {
+    fn handle_client_command(stream: TcpStream) {
         //TODO
+    }
+
+    fn handle_server_command(mut sstream: TcpStream) {
+        let buf : &mut String = &mut "".to_string();
+        //sstream.read_to_string(buf);
+        sstream.read_to_string(buf).unwrap();
+        println!("{:?}", buf);
     }
 
     // accept connections and process them, spawning a new thread for each one
@@ -62,16 +70,27 @@ fn main() {
             Ok(stream) => {
                 thread::spawn(move|| {
                     // connection succeeded
-                    handle_client(stream)
+                    handle_client_command(stream)
                 });
             }
             Err(e) => { /* connection failed */ }
         }
     }
 
+    match stream {
+        Ok(master_data) => {
+            thread::spawn(move|| {
+                // connection succeeded
+                handle_server_command(master_data)
+            });
+        }
+        Err(e) => { panic!("Master connection interrupted".to_string()) }
+    }
 
 
     // close the socket server
     drop(listener);
+    //close the stream
+    drop(master_stream);
 
 }

@@ -2,7 +2,13 @@
 name = "missioncontrol-agent"
 version = "0.1.0"
 authors = ["deathowl <bagoly@endticket.com>"]
+
 [dependencies.getopts]
+
 version = "0.2.11"
 [dependencies.toml]
+
 version = "0.1"
+[dependencies.msgpack]
+
+git = "http://github.com/mneumann/rust-msgpack"
