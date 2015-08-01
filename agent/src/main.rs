@@ -77,7 +77,7 @@ fn main() {
         }
     }
 
-    match stream {
+    match master_stream {
         Ok(master_data) => {
             thread::spawn(move|| {
                 // connection succeeded
