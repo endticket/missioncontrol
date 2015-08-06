@@ -42,8 +42,9 @@ fn main() {
 
     // Create a daemon? if necessary
     if matches.opt_present("d") {
-        let child = Command::new(program).arg("-l").arg(listen_on)
+        let mut child = Command::new(program).arg("-l").arg(listen_on)
             .arg("-m").arg(master_connection).spawn().unwrap();
+        println!("{}", child.wait().unwrap());
         return;
     }
 
@@ -51,16 +52,15 @@ fn main() {
     println!("Connecting to Missioncontrol master on {:?}", master_connection);
 
     let listener = TcpListener::bind(listen_on).unwrap();
-    let mut master_stream = TcpStream::connect(master_connection);
 
     fn handle_client_command(stream: TcpStream) {
-        //TODO
+        println!("{:?}, handling client command", stream);
     }
 
-    fn handle_server_command(mut sstream: TcpStream) {
+    fn handle_server_command(mut stream: TcpStream) {
         let buf : &mut String = &mut "".to_string();
         //sstream.read_to_string(buf);
-        sstream.read_to_string(buf).unwrap();
+        stream.read_to_string(buf).unwrap();
         println!("{:?}", buf);
     }
 
@@ -73,24 +73,22 @@ fn main() {
                     handle_client_command(stream)
                 });
             }
-            Err(e) => { /* connection failed */ }
+            Err(e) => { println!("{}", e); }
         }
     }
 
-    match master_stream {
-        Ok(master_data) => {
+    match TcpStream::connect(master_connection) {
+        Ok(master_stream) => {
             thread::spawn(move|| {
                 // connection succeeded
-                handle_server_command(master_data)
+                handle_server_command(master_stream)
             });
         }
-        Err(e) => { panic!("Master connection interrupted".to_string()) }
+        Err(e) => {
+            panic!(format!("Master connection interrupted: {}", e).to_string())
+        }
     }
-
 
     // close the socket server
     drop(listener);
-    //close the stream
-    drop(master_stream);
-
 }
